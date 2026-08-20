@@ -1,0 +1,48 @@
+# ===================================================================
+# MATRIX SYNAPSE HOMESERVER CONFIGURATION
+# Render (Free) + Neon Postgres + Backblaze B2
+# ===================================================================
+
+server_name: "SERVER_NAME_PLACEHOLDER"
+pid_file: /data/homeserver.pid
+
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+        compress: true
+
+# 1. PERMANENT DATABASE (Neon.tech PostgreSQL)
+database:
+  name: psycopg2
+  args:
+    user: "DB_USER_PLACEHOLDER"
+    password: "DB_PASSWORD_PLACEHOLDER"
+    host: "DB_HOST_PLACEHOLDER"
+    port: 5432
+    database: "DB_NAME_PLACEHOLDER"
+    sslmode: "require"
+
+# 2. PERMANENT MEDIA STORAGE (Backblaze B2 S3)
+media_storage_providers:
+  - module: s3_storage_provider.S3StorageProviderBackend
+    store_local: true
+    store_remote: true
+    store_synchronous: true
+    config:
+      bucket: "B2_BUCKET_PLACEHOLDER"
+      endpoint_url: "B2_ENDPOINT_PLACEHOLDER"
+      region_name: "B2_REGION_PLACEHOLDER"
+      access_key_id: "B2_ACCESS_KEY_PLACEHOLDER"
+      secret_access_key: "B2_SECRET_KEY_PLACEHOLDER"
+
+# 3. REGISTRATION CONTROL (Set to 'false' after creating your account)
+enable_registration: true
+allow_guest_access: false
+suppress_key_server_warning: true
+
+max_upload_size: 50M
+media_store_path: "/data/media_store"
