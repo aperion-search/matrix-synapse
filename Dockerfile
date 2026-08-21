@@ -1,6 +1,6 @@
 FROM matrixdotorg/synapse:latest
 
-# Fixed: Package name on PyPI is 'synapse-s3-storage-provider'
+# Install S3 storage plugin
 RUN pip install --no-cache-dir synapse-s3-storage-provider
 
 WORKDIR /data
@@ -23,4 +23,6 @@ RUN echo '#!/bin/sh' > /data/start.sh && \
     echo 'exec python3 -m synapse.app.homeserver --config-path /data/homeserver.yaml' >> /data/start.sh && \
     chmod +x /data/start.sh
 
+# CRITICAL FIX: Reset entrypoint so Docker executes start.sh directly
+ENTRYPOINT []
 CMD ["/data/start.sh"]
