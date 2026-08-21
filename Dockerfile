@@ -1,7 +1,7 @@
 FROM matrixdotorg/synapse:latest
 
-# Install Backblaze S3 storage provider plugin
-RUN pip install --no-cache-dir matrix-synapse-s3-storage-provider
+# Fixed: Package name on PyPI is 'synapse-s3-storage-provider'
+RUN pip install --no-cache-dir synapse-s3-storage-provider
 
 WORKDIR /data
 
