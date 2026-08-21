@@ -6,8 +6,12 @@
 server_name: "SERVER_NAME_PLACEHOLDER"
 pid_file: /data/homeserver.pid
 
-# MANDATORY: Explicitly opt out (or in) of anonymous usage statistics
 report_stats: false
+
+# 1. SECRET KEYS
+macaroon_secret_key: "MACAROON_SECRET_PLACEHOLDER"
+form_secret: "FORM_SECRET_PLACEHOLDER"
+registration_shared_secret: "REG_SECRET_PLACEHOLDER"
 
 listeners:
   - port: 8008
@@ -18,7 +22,7 @@ listeners:
       - names: [client, federation]
         compress: true
 
-# 1. PERMANENT DATABASE (Neon.tech PostgreSQL)
+# 2. PERMANENT DATABASE (Neon.tech PostgreSQL)
 database:
   name: psycopg2
   args:
@@ -29,7 +33,7 @@ database:
     database: "DB_NAME_PLACEHOLDER"
     sslmode: "require"
 
-# 2. PERMANENT MEDIA STORAGE (Backblaze B2 S3)
+# 3. PERMANENT MEDIA STORAGE (Backblaze B2 S3)
 media_storage_providers:
   - module: s3_storage_provider.S3StorageProviderBackend
     store_local: true
@@ -42,10 +46,15 @@ media_storage_providers:
       access_key_id: "B2_ACCESS_KEY_PLACEHOLDER"
       secret_access_key: "B2_SECRET_KEY_PLACEHOLDER"
 
-# 3. REGISTRATION CONTROL
+# 4. REGISTRATION CONTROL
 enable_registration: true
+enable_registration_without_verification: true
 allow_guest_access: false
+
+# 5. FEDERATION & KEY SERVER WARNING SUPPRESSION
 suppress_key_server_warning: true
+trusted_key_servers:
+  - server_name: "matrix.org"
 
 max_upload_size: 50M
 media_store_path: "/data/media_store"
