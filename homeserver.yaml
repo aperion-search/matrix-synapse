@@ -25,6 +25,8 @@ listeners:
 # 1. PERMANENT DATABASE (Neon.tech PostgreSQL)
 database:
   name: psycopg2
+  # CRITICAL FIX: allow_unsafe_locale belongs here (at database root, NOT inside args)
+  allow_unsafe_locale: true
   args:
     user: "DB_USER_PLACEHOLDER"
     password: "DB_PASSWORD_PLACEHOLDER"
@@ -32,8 +34,6 @@ database:
     port: 5432
     database: "DB_NAME_PLACEHOLDER"
     sslmode: "require"
-    # CRITICAL FIX: Allow Neon's C.UTF-8 locale setting
-    allow_unsafe_locale: true
 
 # 2. PERMANENT MEDIA STORAGE (Backblaze B2 S3)
 media_storage_providers:
