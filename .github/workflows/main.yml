@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      packages: write # Grants automatic permission to publish to GHCR
 
     steps:
       - name: Checkout Repository
@@ -24,7 +24,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }} # Built-in, no PAT required
 
       - name: Generate Lowercase Image Name
         id: image_name
