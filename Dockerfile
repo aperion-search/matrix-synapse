@@ -7,9 +7,15 @@ WORKDIR /data
 
 COPY homeserver.yaml /data/homeserver.yaml.template
 
-# Startup script to inject Render Environment Variables into homeserver.yaml
+# Startup script generating random secret keys if not set, then replacing placeholders
 RUN echo '#!/bin/sh' > /data/start.sh && \
+    echo 'MACAROON_SECRET="${MACAROON_SECRET:-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)}"' >> /data/start.sh && \
+    echo 'FORM_SECRET="${FORM_SECRET:-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)}"' >> /data/start.sh && \
+    echo 'REG_SECRET="${REGISTRATION_SHARED_SECRET:-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)}"' >> /data/start.sh && \
     echo 'sed -e "s|SERVER_NAME_PLACEHOLDER|${SYNAPSE_SERVER_NAME}|g" \' >> /data/start.sh && \
+    echo '    -e "s|MACAROON_SECRET_PLACEHOLDER|${MACAROON_SECRET}|g" \' >> /data/start.sh && \
+    echo '    -e "s|FORM_SECRET_PLACEHOLDER|${FORM_SECRET}|g" \' >> /data/start.sh && \
+    echo '    -e "s|REG_SECRET_PLACEHOLDER|${REG_SECRET}|g" \' >> /data/start.sh && \
     echo '    -e "s|DB_USER_PLACEHOLDER|${DB_USER}|g" \' >> /data/start.sh && \
     echo '    -e "s|DB_PASSWORD_PLACEHOLDER|${DB_PASSWORD}|g" \' >> /data/start.sh && \
     echo '    -e "s|DB_HOST_PLACEHOLDER|${DB_HOST}|g" \' >> /data/start.sh && \
@@ -23,6 +29,5 @@ RUN echo '#!/bin/sh' > /data/start.sh && \
     echo 'exec python3 -m synapse.app.homeserver --config-path /data/homeserver.yaml' >> /data/start.sh && \
     chmod +x /data/start.sh
 
-# CRITICAL FIX: Reset entrypoint so Docker executes start.sh directly
 ENTRYPOINT []
 CMD ["/data/start.sh"]
