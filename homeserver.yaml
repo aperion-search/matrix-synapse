@@ -6,6 +6,9 @@
 server_name: "SERVER_NAME_PLACEHOLDER"
 pid_file: /data/homeserver.pid
 
+# MANDATORY: Explicitly opt out (or in) of anonymous usage statistics
+report_stats: false
+
 listeners:
   - port: 8008
     tls: false
@@ -39,7 +42,7 @@ media_storage_providers:
       access_key_id: "B2_ACCESS_KEY_PLACEHOLDER"
       secret_access_key: "B2_SECRET_KEY_PLACEHOLDER"
 
-# 3. REGISTRATION CONTROL (Set to 'false' after creating your account)
+# 3. REGISTRATION CONTROL
 enable_registration: true
 allow_guest_access: false
 suppress_key_server_warning: true
